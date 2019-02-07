@@ -40,8 +40,7 @@
     <!-- insert vue code here -->
     <!-- @yield('vue-code') -->
 
-    <!-- insert javascript here -->
-    @yield('js-code')
+    
 
     <!-- insert CSS here -->
     @yield('css-code')
@@ -278,5 +277,8 @@ div.form-group{
     </div>
 </div>
 <!-- emailModal (end)-->
+
+<!-- insert javascript here -->
+@yield('js-code')
 </body>
 </html>
