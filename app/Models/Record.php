@@ -68,6 +68,10 @@ class Record extends Model
         return $this->belongsTo('App\Models\Receipt');
     }
 
+    public function gateready_user(){
+      return $this->belongsTo('App\User');
+    }
+
     //  show record page
     public static function show_record($user_id)
     {
