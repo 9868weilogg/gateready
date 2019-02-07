@@ -10,6 +10,8 @@ use App\Models\TimeRange;
 use App\Models\Package;
 use App\Models\Receipt;
 
+use Validator;
+
 class Record extends Model
 {
     protected $primaryKey = 'reference_number';
@@ -66,6 +68,10 @@ class Record extends Model
         return $this->belongsTo('App\Models\Receipt');
     }
 
+    public function gateready_user(){
+      return $this->belongsTo('App\User');
+    }
+
     //  show record page
     public static function show_record($user_id)
     {
@@ -84,9 +90,10 @@ class Record extends Model
         {
           $status[$record->reference_number] = Record::find($record->reference_number)->status;
           $time_range[$record->reference_number] = Record::find($record->reference_number)->time_range;
-        $package[$record->package_id] = Package::find($record->package_id);
-        $user[$record->gateready_user_id] = User::find($record->gateready_user_id);
-        $payment = $user[$record->gateready_user_id]->credit - $package[$record->package_id]->price ;
+          $package[$record->package_id] = Package::find($record->package_id);
+          $user[$record->gateready_user_id] = User::find($record->gateready_user_id);
+          $payment = 0.00;
+          // $payment = $user[$record->gateready_user_id]->credit - $package[$record->package_id]->price ;
         }
 
         return [
@@ -115,7 +122,7 @@ class Record extends Model
     }
 
     //  post schedule delivery 
-    public static function post_schedule_delivery(Request $request)
+    public static function post_schedule_delivery($request)
     {
       // validate input
       $validator = Validator::make($request->all(),[
@@ -133,11 +140,11 @@ class Record extends Model
     }
 
     //  reschedule the date and time of delivery
-    public static function post_reschedule_delivery(Request $request)
+    public static function post_reschedule_delivery($request)
     {
       // echo "$record_reference_number";
       //  validate
-      $validator = Validator::make(Input::all(),[
+      $validator = Validator::make($request->all(),[
         'schedule_date' => 'required',
         'time_range_id' => 'required',
       ]);

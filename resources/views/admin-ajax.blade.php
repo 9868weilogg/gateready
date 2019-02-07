@@ -1,4 +1,4 @@
-@extends('layouts.gateready.gateready-app-ajax')
+@extends('layouts.gateready-app-ajax')
 
 @section('title')
 Admin
@@ -204,16 +204,16 @@ Admin
         	<td>{{ $time_range[$record->reference_number]->name }}</td>
         	<td>{{ $customer[$record->gateready_user_id]->contact_number }}</td>
         	<!-- if location is within UPM kolej -->
-        	@if($location[$record->gateready_user_id]->name != 'Seri Serdang')
-        	<td>{{ $location[$record->gateready_user_id]->name }}</td>
+        	{{-- @if($location[$record->gateready_user_id]->name != 'Seri Serdang') --}}
+        	{{-- <td>{{ $location[$record->gateready_user_id]->name }}</td> --}}
         	<!-- if location is in Seri Serdang -->
-        	@else
+        	{{-- @else --}}
         	<td>
-        		{{ $address[$record->gateready_user_id]->address_line_1 }}<br>
+        		{{-- {{ $address[$record->gateready_user_id]->address_line_1 }}<br>
         		{{ $address[$record->gateready_user_id]->address_line_2 }}<br>
-        		{{ $location[$record->gateready_user_id]->name }}
+        		{{ $location[$record->gateready_user_id]->name }} --}}
         	</td>
-        	@endif
+        	{{-- @endif --}}
         	<!-- form to edit customer's delivery status -->
         	<td>
         		<p>{{$status[$record->reference_number]->name}}</p>

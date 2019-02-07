@@ -69,13 +69,17 @@ button.submit_button:hover{
 		{{ $error }}
 		@endforeach
 		@endif
-		<form method="post" action="/gateready/record/{{ Auth::user()->id }}/feedback/{{ $record_reference_number }}">
+    <form method="post" action="/records/1">
+		{{-- <form method="post" action="/gateready/record/{{ Auth::user()->id }}/feedback/{{ $record_reference_number }}"> --}}
 			@csrf
+      @method('put')
 			<div class="form-group">
 				<label for="msg">Feedback Message</label>
 				<textarea rows="4" cols="50" name="msg" placeholder="Enter Your Message Here..." class="form-control" autofocus required></textarea>
 			</div>
 			<div class="form-group center-block">
+        <input type="hidden" name="reference" value="{{ $record_reference_number }}">
+        <input type="hidden" name="process" value="feedback">
 				<button name="submit_button" type="submit" class="submit_button  col-md-6  ">Feedback to Us</button>
 			</div>
 		</form>

@@ -40,8 +40,7 @@
     <!-- insert vue code here -->
     <!-- @yield('vue-code') -->
 
-    <!-- insert javascript here -->
-    @yield('js-code')
+    
 
     <!-- insert CSS here -->
     @yield('css-code')
@@ -141,7 +140,7 @@ div.form-group{
                             </li>
                         {{-- @else --}}
                             <li class="nav-item">
-                                <a class="nav-link" href="/records/create?schedule_delivery=1">Experience It</a>
+                                <a class="nav-link" href="/records/create">Experience It</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/records">Record</a>
@@ -278,5 +277,8 @@ div.form-group{
     </div>
 </div>
 <!-- emailModal (end)-->
+
+<!-- insert javascript here -->
+@yield('js-code')
 </body>
 </html>

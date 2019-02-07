@@ -43,7 +43,7 @@ p.record {
 	</div>
 	<div class="col-md-12">
 		<p class="record">Checkout your online purchases with the address above, as shipment address. <br>
-		Then inform GateReady <a href="/records/create?schedule_delivery=1" title="Schedule Delivery">here</a>.</p>
+		Then inform GateReady <a href="/records/create" title="Schedule Delivery">here</a>.</p>
 	</div>
 	<table class="table table-striped">
 		<thead class="thead-dark">
@@ -74,27 +74,33 @@ p.record {
 				<!-- to allow customer to reschedule and give feedback -->
 				<!-- reschedule link -->
 				@if($status[$record->reference_number]->name == 'reschedule')
-				<td><a href="/records/{{$record->reference_number}}/edit?reschedule_delivery=1" title="Reschedule Delivery">{{ $status[$record->reference_number]->name }}</a> | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td>
+        <td><a href="/records/{{$record->reference_number}}/edit?process=reschedule_delivery" title="Reschedule Delivery">{{ $status[$record->reference_number]->name }}</a> | <a href="/records/1?reference={{$record->reference_number}}&print=invoice" target="_blank" title="Print Delivery Invoice">Print Invoice</a></td>
+				{{-- <td><a href="/records/{{$record->reference_number}}/edit?reschedule_delivery=1" title="Reschedule Delivery">{{ $status[$record->reference_number]->name }}</a> | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td> --}}
 				
 				<!-- "departed status" -->
 				@elseif($status[$record->reference_number]->name == 'departed')
-				<td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td>
+        <td>{{ $status[$record->reference_number]->name }} | <a href="/records/1?reference={{$record->reference_number}}&print=invoice" target="_blank" title="Print Delivery Invoice">Print Invoice</a></td>
+				{{-- <td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td> --}}
 				<!-- "schedule status" -->
 				@elseif($status[$record->reference_number]->name == 'schedule')
-				<td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td>
+        <td>{{ $status[$record->reference_number]->name }} | <a href="/records/1?reference={{$record->reference_number}}&print=invoice" target="_blank" title="Print Delivery Invoice">Print Invoice</a></td>
+				{{-- <td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td> --}}
 				<!-- "pending status" -->
 				@elseif($status[$record->reference_number]->name == 'pending')
-				<td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td>
+        <td>{{ $status[$record->reference_number]->name }} | <a href="/records/1?reference={{$record->reference_number}}&print=invoice" target="_blank" title="Print Delivery Invoice">Print Invoice</a></td>
+				{{-- <td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td> --}}
 				<!-- "verefied status" -->
 				@elseif($status[$record->reference_number]->name == 'verified')
-				<td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td>
+        <td>{{ $status[$record->reference_number]->name }} | <a href="/records/1?reference={{$record->reference_number}}&print=invoice" target="_blank" title="Print Delivery Invoice">Print Invoice</a></td>
+				{{-- <td>{{ $status[$record->reference_number]->name }} | <a href="/record/{{ Auth::user()->id }}/invoice/{{$record->reference_number}}" title="Print Delivery Invoice">Print Invoice</a></td> --}}
 				<!-- give feedback link -->
 				@elseif($status[$record->reference_number]->name == 'sent')
 				<td>
 					<select name="forma" onchange="location = this.value;">
 						<option selected>{{ $status[$record->reference_number]->name }}</option>
 						<option value="/records/{{$record->reference_number}}/edit?feedback=1">Rate Our Service</option>
-						<option value="/records/{{$record->reference_number}}/edit?receipt=1">Print Your Receipt</option>
+            <option value="/records/1?reference={{$record->reference_number}}&print=receipt">Print Your Receipt</option>
+						{{-- <option value="/records/{{$record->reference_number}}/edit?receipt=1">Print Your Receipt</option> --}}
 					</select>
 				</td>
 				@endif
