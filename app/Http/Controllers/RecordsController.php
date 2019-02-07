@@ -43,7 +43,7 @@ class RecordsController extends Controller
         }
         
         
-        return view('record',compact('records','time_range','package','user','payment','status'));
+        return view('records.index',compact('records','time_range','package','user','payment','status'));
     }
 
     /**
@@ -53,14 +53,12 @@ class RecordsController extends Controller
      */
     public function create(Request $request)
     {
-        if($request->schedule_delivery) {
-          $data = Record::show_schedule_delivery(1);
-          // $data = Record::show_schedule_delivery(Auth::user()->id);
-          $couriers = $data['couriers'];
-          $time_ranges = $data['time_ranges'];
+        $data = Record::show_schedule_delivery(1);
+        // $data = Record::show_schedule_delivery(Auth::user()->id);
+        $couriers = $data['couriers'];
+        $time_ranges = $data['time_ranges'];
 
-          return view('schedule-delivery',compact('couriers','time_ranges'));
-        }
+        return view('records.create',compact('couriers','time_ranges'));
     }
 
     /**
@@ -71,17 +69,18 @@ class RecordsController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->schedule_delivery) {
+        if($request->process == "schedule_delivery") {
           $validator = Record::post_schedule_delivery($request);
           //  if validation fail
           if($validator->fails())
           {
-            return Redirect::to('records/create/?schedule-delivery=1')->withErrors($validator)->withInput();
+            return Redirect::to('records/create')->withErrors($validator)->withInput();
           }
           else
           {
             $record = new Record;
-            $record->gateready_user_id = Auth::user()->id;
+            $record->gateready_user_id = 1;
+            // $record->gateready_user_id = Auth::user()->id;
             $record->tracking_number = $request->tracking_number;
             $record->courier_id = $request->courier_id;
             $record->package_id = $request->package_id;
@@ -105,9 +104,19 @@ class RecordsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        //
+        if($request->print == "invoice") {
+          $data = ['title' => 'Invoice'];
+          $pdf = PDF::loadView('/invoice',$data);
+        
+          return $pdf->stream();
+        } elseif($request->print == "receipt") {
+          $data = ['title' => 'Receipt'];
+          $pdf = PDF::loadView('/receipt',$data);
+
+          return $pdf->stream();
+        }
     }
 
     /**
@@ -118,15 +127,15 @@ class RecordsController extends Controller
      */
     public function edit($id, Request $request)
     {
-        if($request->reschedule_delivery) {
+        if($request->process == "reschedule_delivery") {
           $time_ranges = TimeRange::all();
-            return view('reschedule-delivery',[
+            return view('records.edit',[
             'record_reference_number' => $id,
             'time_ranges' => $time_ranges,
           ]);
-        } elseif ($request->feedback) {
+        } elseif ($request->process == "feedback") {
           return view('feedback',[
-            'user_id' => Auth::user()->id,
+            'user_id' => 1,
             'record_reference_number' => $id,
           ]);
         }
@@ -141,12 +150,12 @@ class RecordsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if($request->reschedule_delivery) {
+        if($request->process == "reschedule_delivery") {
           $validator = Record::post_reschedule_delivery($request);
           //  if validation fail
           if($validator->fails())
           {
-            return Redirect::to('/records/'. $id .'/edit?reschedule_delivery=1')->withErrors($validator)->withInput();
+            return Redirect::to('/records/'. $id .'/edit?process=reschedule_delivery')->withErrors($validator)->withInput();
           }
           else
           {
@@ -155,7 +164,8 @@ class RecordsController extends Controller
             // echo $user_id;
             Record::where([
               'reference_number' => $id,
-              'gateready_user_id' => Auth::user()->id,
+              'gateready_user_id' => 1,
+              // 'gateready_user_id' => Auth::user()->id,
             ])->update([
               'schedule_date' => $request->schedule_date,
               'time_range_id' => $request->time_range_id,
@@ -163,7 +173,7 @@ class RecordsController extends Controller
 
             return Redirect::to('records');
           }
-        } elseif($request->feedback) {
+        } elseif($request->process == "feedback") {
           // echo "$record_reference_number";
           //  validate the input
           $validator = Validator::make(Input::all(),[
@@ -173,15 +183,17 @@ class RecordsController extends Controller
           //  if validator fail
           if($validator->fails())
           {
-            return Redirect::to('records/' .$id .'/edit?feedback=1')->withErrors($validator);
+            return Redirect::to('records/1/edit?reference=' . $request->reference .'process=feedback')->withErrors($validator);
+            // return Redirect::to('records/' .$id .'/edit?feedback=1')->withErrors($validator);
             // echo "$record_reference_number";
 
           }
           else
           {
             Record::where([
-              'gateready_user_id' => Auth::user()->id,
-              'reference_number' => $id,
+              'gateready_user_id' => 1,
+              // 'gateready_user_id' => Auth::user()->id,
+              'reference_number' => $request->reference,
             ])->update([
               
               'message' => $request->msg,
@@ -204,63 +216,4 @@ class RecordsController extends Controller
 
     
 
-    
-
-    
-
-    // //  show schedule delivery page
-    // public function show_reschedule_delivery(Request $request, $user_id, $record_reference_number)
-    // {
-    //  $time_ranges = TimeRange::all();
-    //     return view('reschedule-delivery',[
-    //    'record_reference_number' => $record_reference_number,
-    //         'time_ranges' => $time_ranges,
-    //  ]);
-    // }
-
-    
-
-    
-
-    /****
-    ***
-    ***   generate random code
-    ***
-    ***/
-    public function insert_gateready_user_id()
-    {
-      // $code = $this->generate_code('');
-      // echo $code;
-    }
-
-    /****
-    ***
-    ***   print invoice
-    ***   Display a listing of resource.
-    ***   @return \Illuminate\Http\Response
-    ***
-    ***/
-    public function print_invoice($user_id,$record_reference_number)
-    {
-      $data = ['title' => 'Invoice'];
-      $pdf = PDF::loadView('/invoice',$data);
-      
-
-      return $pdf->download('invoice.pdf');
-    }
-
-    /****
-    ***
-    ***   print receipt
-    ***   Display a listing of resource.
-    ***   @return \Illuminate\Http\Response
-    ***
-    ***/
-    public function print_receipt($user_id,$record_reference_number)
-    {
-      $data = ['title' => 'Receipt'];
-      $pdf = PDF::loadView('/receipt',$data);
-
-      return $pdf->download('receipt.pdf');
-    }
 }
