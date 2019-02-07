@@ -141,7 +141,7 @@ div.form-group{
                             </li>
                         {{-- @else --}}
                             <li class="nav-item">
-                                <a class="nav-link" href="/records/create?schedule_delivery=1">Experience It</a>
+                                <a class="nav-link" href="/records/create">Experience It</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/records">Record</a>

@@ -172,7 +172,7 @@ i.fa-edit,i.fa-calendar,i.fa-truck{
     {{-- @guest
     <button class="jumbo" data-toggle="modal" data-target="#regModal">Experience GateReady now</button>
     @else --}}
-    <button class="jumbo" onclick="window.location.href='/records/create?schedule_delivery=1'">Experience GateReady now</button>
+    <button class="jumbo" onclick="window.location.href='/records/create'">Experience GateReady now</button>
     {{-- @endguest --}}
     
 </div>
@@ -284,7 +284,7 @@ i.fa-edit,i.fa-calendar,i.fa-truck{
         {{-- @guest
         <a class="button" data-toggle="modal" data-target="#regModal">Experience GateReady now</a>
         @else --}}
-        <a class="button" role="button" href="/records/create?schedule_delivery=1">Experience GateReady now</a>
+        <a class="button" role="button" href="/records/create">Experience GateReady now</a>
         {{-- @endguest --}}
     </div>
 </div>
